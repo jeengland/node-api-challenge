@@ -2,6 +2,7 @@
 const express = require('express');
 
 const db = require('../data/helpers/projectModel');
+const actionDb = require('../data/helpers/actionModel');
 
 // router setup
 const router = express.Router();
@@ -63,7 +64,23 @@ router.post('/', validateProject, (req, res) => {
         })
 })
 
-router.put('/:id', [validateProject, validateProjectId], (req, res) => {
+router.post('/:id/actions', [validateProjectId, validateAction], (req, res) => {
+    const id = req.params.id;
+    const newAction = req.body;
+    newAction.project_id = id;
+    actionDb.insert(newAction)
+        .then((action) => {
+            res.status(201).json({ action })
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({
+                message: 'Could not create action.'
+            })
+        })
+})
+
+router.put('/:id', [validateProjectId, validateProject], (req, res) => {
     const id = req.params.id;
     const newProject = req.body;
     db.update(id, newProject)
@@ -124,6 +141,24 @@ function validateProjectId(req, res, next) {
                 message: 'Could not validate project ID.'
             })
         })
+}
+
+function validateAction(req, res, next) {
+    const newAction = req.body;
+    if (newAction.description && newAction.notes) {
+        if (newAction.description.length <= 128) {
+            next();
+        }
+        else {
+            res.status(400).json({
+                message: 'Description length exceeds character limit (128).'
+            })
+        }
+    } else {
+        res.status(400).json({
+            message: 'Action is missing description and/or notes.'
+        })
+    }
 }
 
 module.exports = router;
