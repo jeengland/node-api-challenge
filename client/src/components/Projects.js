@@ -3,14 +3,19 @@ import axios from 'axios';
 import styled from '@emotion/styled';
 
 import Project from './Project';
+import { Link } from 'react-router-dom'
 
 const ProjectsContainer = styled.div`
     max-width: 800px;
     margin: 0 auto;
-    background-color: grey;
+    background-color: green;
     padding: 1%;
+    min-height: 100vh;
     h1 {
         text-align: center;
+    }
+    a {
+        text-decoration: none;
     }
 `
 
@@ -27,7 +32,9 @@ const Projects = () => {
             <h1>Projects</h1>
             {data.map((project) => {
                 return (
-                    <Project project={project}/>
+                    <Link to={`/${project.id}/details`}>
+                        <Project project={project}/>
+                    </Link>
                 )
             })}
         </ProjectsContainer>
