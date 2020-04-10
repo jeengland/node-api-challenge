@@ -49,6 +49,37 @@ router.post('/', validateProject, (req, res) => {
         })
 })
 
+router.put('/:id', [validateProject, validateProjectId], (req, res) => {
+    const id = req.params.id;
+    const newProject = req.body;
+    db.update(id, newProject)
+        .then((project) => {
+            res.status(200).json({ project })
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({
+                message: 'Could not update project.'
+            })
+        })   
+})
+
+router.delete('/:id', validateProjectId, (req, res) => {
+    const id = req.params.id;
+    db.remove(id)
+        .then((count) => {
+            res.status(200).json({
+                message: 'Project successfully deleted.'
+            })
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({
+                message: 'Could not delete project.'
+            })
+        })
+})
+
 // custom middleware
 function validateProject(req, res, next) {
     const newProject = req.body;
