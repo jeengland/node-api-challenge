@@ -23,6 +23,15 @@ const DetailsContainer = styled.section`
             color: black;
         }
     }
+    .actions {
+        padding: 1%;
+        border: 1px solid black;
+        margin-bottom: 3%;
+        h3{
+            margin-top: 0;
+            text-decoration: underline;
+        }
+    }
 `
 
 const Details = () => {
