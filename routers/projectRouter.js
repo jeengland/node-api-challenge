@@ -100,7 +100,7 @@ router.delete('/:id', validateProjectId, (req, res) => {
     db.remove(id)
         .then((count) => {
             res.status(200).json({
-                message: 'Project successfully deleted.'
+                message: `Successfully deleted ${count} project${count === 1 ? '' : 's'}.`
             })
         })
         .catch((error) => {

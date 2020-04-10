@@ -21,6 +21,51 @@ router.get('/', (req, res) => {
         })
 })
 
+router.get('/:id', validateActionId, (req, res) => {
+    const id = req.params.id;
+    db.get(id)
+        .then((action) => {
+            res.status(200).json({ action })
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({
+                message: 'Could not retrieve action.'
+            })
+        })
+})
+
+router.put('/:id', [validateActionId, validateAction], (req, res) => {
+    const id = req.params.id;
+    const newAction = req.body;
+    db.update(id, newAction)
+        .then((action) => {
+            res.status(200).json({ action })
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({
+                message: 'Could not update action.'
+            })
+        })
+})
+
+router.delete('/:id', validateActionId, (req, res) => {
+    const id = req.params.id;
+    db.remove(id)
+        .then((count) => {
+            res.status(200).json({
+                message: `Successfully deleted ${count} action${count === 1 ? '' : 's'}.`
+            })
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({
+                message: 'Could not delete action.'
+            })
+        })
+})
+
 // custom middleware
 function validateAction(req, res, next) {
     const newAction = req.body;
